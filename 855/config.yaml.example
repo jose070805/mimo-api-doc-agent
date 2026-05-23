@@ -1,0 +1,40 @@
+# ============================================================
+# MiMo API Doc Agent 配置文件
+# 复制此文件为 config.yaml 并填入实际值
+# ============================================================
+
+# MiMo API 配置
+mimo:
+  api_key: "${MIMO_API_KEY}"           # 或直接填写 "your-api-key"
+  base_url: "https://api.mimo.xiaomi.com/v1"
+  model: "mimo-v2.5-pro"               # 推荐: mimo-v2.5-pro, mimo-turbo
+  max_tokens: 4096
+  temperature: 0.3
+  max_retries: 3                       # 失败重试次数
+
+# 解析器配置
+parser:
+  file_extensions:
+    - .py
+    - .js
+    - .ts
+    - .go
+    - .java
+  ignore_dirs:
+    - node_modules
+    - __pycache__
+    - .git
+    - venv
+    - .venv
+    - dist
+    - build
+
+# 生成器配置
+generator:
+  languages:
+    - zh-CN                          # 可添加 "en" 生成英文版
+
+# 校验器配置
+validator:
+  consistency_threshold: 0.85         # 一致性分数阈值（低于此值触发自动修复）
+  auto_fix_pr: true                   # 是否自动生成修复 PR

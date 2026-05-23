@@ -1,0 +1,53 @@
+# {{ repo_name }} API 文档
+
+> 自动生成于 {{ timestamp }} | Powered by MiMo API Doc Agent
+
+---
+
+## 目录
+
+{% for endpoint in endpoints %}
+- [{{ endpoint.method }} {{ endpoint.path }}](#{{ endpoint.method | lower }}-{{ endpoint.path | replace('/', '') | replace('{', '') | replace('}', '') }})
+{% endfor %}
+
+---
+
+## API 接口
+
+{% for endpoint in endpoints %}
+### {{ endpoint.method }} {{ endpoint.path }}
+
+{{ endpoint.docstring | default('暂无描述') }}
+
+- **文件**: `{{ endpoint.file }}:{{ endpoint.line }}`
+- **方法**: `{{ endpoint.method }}`
+
+```bash
+curl -X {{ endpoint.method }} \
+  https://api.example.com{{ endpoint.path }} \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+---
+
+{% endfor %}
+
+## 数据模型
+
+{% for model in models %}
+### {{ model.name }}
+
+- **文件**: `{{ model.file }}:{{ model.line }}`
+
+```
+{{ model.fields }}
+```
+
+---
+
+{% endfor %}
+
+---
+
+*本文档由 MiMo API Doc Agent 自动生成，请以代码实际行为为准。*
