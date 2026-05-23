@@ -1,0 +1,49 @@
+name: API Doc Auto-Generate
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'src/**'
+      - 'api/**'
+      - 'routes/**'
+      - 'models/**'
+  pull_request:
+    branches: [main]
+    types: [closed]
+
+jobs:
+  generate-docs:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install requests pyyaml jinja2 gitpython rich
+
+      - name: Run MiMo API Doc Agent
+        env:
+          MIMO_API_KEY: ${{ secrets.MIMO_API_KEY }}
+        run: |
+          python main.py \
+            --repo ${{ github.workspace }} \
+            --output ./docs
+
+      - name: Commit docs
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add docs/
+          git diff --staged --quiet || git commit -m "docs: auto-update API documentation [skip ci]"
+          git push
